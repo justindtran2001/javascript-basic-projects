@@ -37,3 +37,71 @@ const reviews = [
       "Edison bulb put a bird on it humblebrag, marfa pok pok heirloom fashion axe cray stumptown venmo actually seitan. VHS farm-to-table schlitz, edison bulb pop-up 3 wolf moon tote bag street art shabby chic. ",
   },
 ];
+
+const img = document.getElementById('person-img');
+const author = document.getElementById('author');
+const job = document.getElementById('job');
+const info = document.getElementById('info');
+
+const prevBtn = document.querySelector('button.prev-btn');
+const nextBtn = document.querySelector('button.next-btn');
+const randomBtn = document.querySelector('button.random-btn');
+
+let currentReviewID = 1;
+let updateCurrentReviewByID = (newID) => {
+  console.log("New ID: " + newID);
+
+  currentReviewID = newID;
+
+  let newConcent = queryReviewByID(currentReviewID);
+
+  img.setAttribute('src', newConcent.img);
+  author.textContent = newConcent.name;
+  job.textContent = newConcent.job;
+  info.textContent = newConcent.text;
+};
+
+// Initial load
+window.addEventListener('DOMContentLoaded', () => {
+  updateCurrentReviewByID(currentReviewID);
+});
+
+// Button events
+prevBtn.addEventListener('click', () => {
+  console.log("Prev Button Clicked");
+
+  if (currentReviewID === reviews[0].id)
+    updateCurrentReviewByID(reviews[reviews.length - 1].id);
+  else
+    updateCurrentReviewByID(currentReviewID - 1);
+});
+
+nextBtn.addEventListener('click', () => {
+  console.log("Next Button Clicked");
+
+  if (currentReviewID === reviews[reviews.length - 1].id)
+    updateCurrentReviewByID(reviews[0].id);
+  else
+    updateCurrentReviewByID(currentReviewID + 1);
+});
+
+randomBtn.addEventListener('click', () => {
+  console.log("Random Button Clicked");
+
+  let newRandID = getRandomID();
+  while (newRandID === currentReviewID)
+    newRandID = getRandomID();
+
+  updateCurrentReviewByID(newRandID);
+});
+
+
+// Utility functions
+function getRandomID() {
+  return Math.floor(Math.random() * 4 + 1);
+}
+
+function queryReviewByID(id) {
+  for (let i = 0; i < reviews.length; ++i)
+    if (reviews[i].id === id) return reviews[i];
+}
