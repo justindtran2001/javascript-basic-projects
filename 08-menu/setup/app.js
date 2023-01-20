@@ -71,4 +71,76 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "steak",
+    category: "dinner",
+    price: 36.99,
+    img: "./images/item-10.jpeg",
+    desc: `Et eu laborum eu irure enim nulla aliquip officia incididunt est et qui ad.`,
+  },
 ];
+const sectionCenter = document.querySelector(".section-center");
+const btnContainer = document.querySelector(".btn-container");
+
+// init data load
+window.addEventListener("DOMContentLoaded", () => {
+  displayMenuToHTML(menu);
+  displayFilterBtnsToHTML();
+});
+
+function displayFilterBtnsToHTML() {
+  let categories = menu.reduce(
+    (res, value) => {
+      if (!res.includes(value.category)) res.push(value.category);
+      return res;
+    },
+    ["all"]
+  );
+
+  // Display
+  const htmlFilterBtns = categories
+    .map(
+      (cat) =>
+        `<button class="filter-btn" type="button" data-category="${cat}">${cat}</button>`
+    )
+    .join("");
+  btnContainer.innerHTML = htmlFilterBtns;
+
+  // Add event listeners
+  const filterBtns = btnContainer.querySelectorAll(".filter-btn");
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      let category = btn.dataset.category;
+
+      if (category === "all") {
+        displayMenuToHTML(menu);
+        return;
+      }
+
+      let filteredMenuItems = menu.filter((item) => item.category === category);
+      displayMenuToHTML(filteredMenuItems);
+    });
+  });
+}
+
+function displayMenuToHTML(menuItems) {
+  let htmlMenu = menuItems.map(
+    (item) => `
+      <article class="menu-item">
+        <img src="${item.img}" alt="${item.title}" class="photo" />
+        <div class="item-info">
+          <header>
+            <h4>${item.title}</h4>
+            <h4 class="price">$${item.price}</h4>
+          </header>
+          <div class="item-text">
+            <p>${item.desc}</p>
+          </div>
+        </div>
+      </article>
+    `
+  );
+  htmlMenu = htmlMenu.join("");
+  sectionCenter.innerHTML = htmlMenu;
+}
